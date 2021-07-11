@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ImageRep",
-    platforms: [SupportedPlatform.macOS(.v10_15)],
-    products: [.library(name: "ImageRep", targets: ["ImageRep"]),],
-    targets: [.target(name: "ImageRep", dependencies: [])]
+    platforms: [.macOS(.v10_15)],
+    products: [.library(name: "ImageRep", targets: ["ImageRep"])],
+    targets: [.target(name: "ImageRep")]
 )

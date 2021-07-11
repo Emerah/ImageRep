@@ -11,9 +11,11 @@ public class ImageRep {
     
     private let _image: ImageRGBA
     private let _image565: Image565
+    private let _cgImage: CGImage
     
     public var image: ImageRGBA { _image }
     public var image565: Image565 { _image565 }
+    public var cgImage: CGImage { _cgImage }
     
     public convenience init(url: URL, type: ImageType) {
         guard let provider = CGDataProvider(url: url as CFURL) else {
@@ -39,14 +41,14 @@ public class ImageRep {
         }
     }
     
-    private convenience init(pngDataProvider: CGDataProvider) {
+    public convenience init(pngDataProvider: CGDataProvider) {
         guard let image = CGImage(pngDataProviderSource: pngDataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) else {
             fatalError("ERROR::LOADING_CGIMAGE_FROM_PNG_DATA_PROVIDER")
         }
         self.init(image)
     }
     
-    private convenience init(jpgDataProvider: CGDataProvider) {
+    public convenience init(jpgDataProvider: CGDataProvider) {
         guard let image = CGImage(jpegDataProviderSource: jpgDataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) else {
             fatalError("ERROR::LOADING_CGIMAGE_FROM_JPG_DATA_PROVIDER")
         }
@@ -58,10 +60,12 @@ public class ImageRep {
             fatalError("ERROR::RETRIEVING DATA FROM IMAGE")
         }
         
+        self._cgImage = image
+        
         let pixels = Array(data).chunked(into: 4).map { chunk in
             Pixel(red: chunk[0], green: chunk[1], blue: chunk[2], alpha: chunk[3])
         }
-        _image = ImageRGBA(pixels: pixels, width: image.width, height: image.height)
+        self._image = ImageRGBA(pixels: pixels, width: image.width, height: image.height)
         
         let pixels565 = pixels.map { pixel -> Pixel565 in
             let red = (UInt32(pixel.red) * (31*2) + 255) / (255*2)
@@ -69,7 +73,7 @@ public class ImageRep {
             let blue = (UInt32(pixel.blue) * 31 + 127) / 255
             return Pixel565(value: UInt16(red << 11) | UInt16(green << 5) | UInt16(blue))
         }
-        _image565 = Image565(pixels: pixels565, width: image.width, height: image.height)
+        self._image565 = Image565(pixels: pixels565, width: image.width, height: image.height)
     }
 }
 

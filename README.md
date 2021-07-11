@@ -38,6 +38,7 @@ Add the package to your swift project and `import ImageRep`.
 ## Operating System:
 
     - macOS v10_15 and higher.
+    - Swift 5.4
     
 ## How to use the library in you code:
             
@@ -96,4 +97,9 @@ Add the package to your swift project and `import ImageRep`.
         image565.pixels
 
         image565.bytes
+        
+## New in 1.1.0
+
+    - added `cgImage` property
+    - added initializing with CGDataProvider for JPG and PNG images.
     
